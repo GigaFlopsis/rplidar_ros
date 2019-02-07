@@ -1,5 +1,7 @@
 RPLIDAR ROS package
 =====================================================================
+# UPDATE by GigaFlopsis:
+## added set up speed motor for A1/A2
 
 ROS node and test application for RPLIDAR
 

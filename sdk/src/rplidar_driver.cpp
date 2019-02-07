@@ -2058,10 +2058,19 @@ u_result RPlidarDriverImplCommon::setMotorPWM(_u16 pwm)
     return RESULT_OK;
 }
 
-u_result RPlidarDriverImplCommon::startMotor()
+u_result RPlidarDriverImplCommon::startMotor(_u16 speed_percent = -1)
 {
     if (_isSupportingMotorCtrl) { // RPLIDAR A2
-        setMotorPWM(DEFAULT_MOTOR_PWM);
+        _u16 pwm = 0;
+        if (speed_percent < 0)
+        {
+            pwm = DEFAULT_MOTOR_PWM;
+        }
+        else {
+            float val =  MAX_MOTOR_PWM * speed_percent * 0.01;
+            pwm = (_u16)val;
+        }
+        setMotorPWM(pwm);
         delay(500);
         return RESULT_OK;
     } else { // RPLIDAR A1

@@ -44,6 +44,7 @@
 #define DEG2RAD(x) ((x)*M_PI/180.)
 
 using namespace rp::standalone::rplidar;
+int motor_speed_percent = -1;    // speed motor in percent
 
 RPlidarDriver * drv = NULL;
 
@@ -169,7 +170,7 @@ bool start_motor(std_srvs::Empty::Request &req,
   if(!drv)
        return false;
   ROS_DEBUG("Start motor");
-  drv->startMotor();
+  drv->startMotor((_u16)motor_speed_percent);
   drv->startScan(0,1);
   return true;
 }
@@ -199,6 +200,7 @@ int main(int argc, char * argv[]) {
     nh_private.param<bool>("inverted", inverted, false);
     nh_private.param<bool>("angle_compensate", angle_compensate, false);
     nh_private.param<std::string>("scan_mode", scan_mode, std::string());
+    nh_private.param<int>("motor_speed", motor_speed_percent, -1);
 
     ROS_INFO("RPLIDAR running on ROS package rplidar_ros. SDK Version:"RPLIDAR_SDK_VERSION"");
 
@@ -233,7 +235,7 @@ int main(int argc, char * argv[]) {
     ros::ServiceServer stop_motor_service = nh.advertiseService("stop_motor", stop_motor);
     ros::ServiceServer start_motor_service = nh.advertiseService("start_motor", start_motor);
 
-    drv->startMotor();
+    drv->startMotor((_u16)motor_speed_percent);
 
     RplidarScanMode current_scan_mode;
     if (scan_mode.empty()) {
